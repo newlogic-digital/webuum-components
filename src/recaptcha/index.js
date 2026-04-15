@@ -8,7 +8,7 @@ export class ReCaptcha extends WebuumElement {
     $url: 'https://www.google.com/recaptcha/enterprise.js?render={apikey}',
   }
 
-  connect() {
+  connectedCallback() {
     importScript(this.$url.replace('{apikey}', this.$api))
   }
 

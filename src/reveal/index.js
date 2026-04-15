@@ -22,13 +22,17 @@ export class Reveal extends WebuumElement {
     })
   }
 
-  itemTargetConnected(element) {
+  partConnectedCallback(name, element) {
+    if (name !== '$item') return
+
     if (!this.$observer) this.intersectionObserver()
 
     this.$observer?.observe(element)
   }
 
-  itemTargetDisconnected(element) {
+  partDisconnectedCallback(name, element) {
+    if (name !== '$item') return
+
     this.$observer?.unobserve(element)
   }
 }
