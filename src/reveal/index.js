@@ -6,25 +6,33 @@ export class Reveal extends WebuumElement {
     $item: null,
   }
 
+  static props = {
+    $threshold: 0.1,
+    $intersectionRatio: 0.2,
+    $clear: false,
+  }
+
   intersectionObserver() {
     this.$observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry.intersectionRatio > 0.1 && !entry.target.hasAttribute('data-in')) {
+        if (entry.intersectionRatio > this.$intersectionRatio && !entry.target.hasAttribute('data-in')) {
           entry.target.setAttribute('data-in', '')
 
           if (entry.target.dataset.lazyController) {
             dataset(entry.target, 'controller').add(entry.target.dataset.lazyController)
           }
         }
+        else if (this.$clear) {
+          entry.target.removeAttribute('data-in')
+        }
       })
     }, {
-      threshold: 0.1,
+      threshold: this.$threshold,
     })
   }
 
   partConnectedCallback(name, element) {
     if (name !== '$item') return
-
     if (!this.$observer) this.intersectionObserver()
 
     this.$observer?.observe(element)
