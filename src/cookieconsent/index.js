@@ -2,15 +2,15 @@ import { setCookieConsent, initCookieConsent } from '@newlogic-digital/cookiecon
 import { WebuumElement } from 'webuum'
 
 export class CookieConsentCommon extends WebuumElement {
-  cookieConsentItemKey = 'cookieconsent-js'
-  cookieConsentExpireItemKey = 'cookieconsent-js-expire'
+  $cookieConsentItemKey = 'cookieconsent-js'
+  $cookieConsentExpireItemKey = 'cookieconsent-js-expire'
 
   getCookieConsentItem() {
-    return localStorage.getItem(this.cookieConsentItemKey)
+    return localStorage.getItem(this.$cookieConsentItemKey)
   }
 
   getCookieConsentExpireItem() {
-    return localStorage.getItem(this.cookieConsentExpireItemKey)
+    return localStorage.getItem(this.$cookieConsentExpireItemKey)
   }
 }
 
@@ -23,11 +23,9 @@ export class CookieConsentDialog extends CookieConsentCommon {
     }
 
     if (!this.getCookieConsentItem() || parseInt(this.getCookieConsentExpireItem()) < Date.now()) {
-      setTimeout(async () => {
-        const { showDialog } = await import('winduum/src/components/dialog/index.js')
+      const { showDialog } = await import('winduum/src/components/dialog/index.js')
 
-        await showDialog(this, { closable: false })
-      }, 1500)
+      await showDialog(this, { closable: false })
     }
     else {
       this.remove()
