@@ -26,8 +26,8 @@ export class Form extends FormComponent {
     if (event?.detail?.recaptchaExecuted) return
 
     window.grecaptcha.enterprise.ready(async () => {
-      this.element.gtoken.value = await window.grecaptcha.enterprise.execute(this.$recaptchaApikey, { action: this.$recaptchaAction ?? 'form' })
-      this.element.dispatchEvent(new CustomEvent('submit', { cancelable: true, detail: { recaptchaExecuted: true } }))
+      this.gtoken.value = await window.grecaptcha.enterprise.execute(this.$recaptchaApikey, { action: this.$recaptchaAction ?? 'form' })
+      this.dispatchEvent(new CustomEvent('submit', { cancelable: true, detail: { recaptchaExecuted: true } }))
     })
   }
 }
