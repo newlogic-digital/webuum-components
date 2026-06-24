@@ -1,6 +1,6 @@
 {
   "name": "@newlogic-digital/webuum-components",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "type": "module",
   "scripts": {
     "eslint": "eslint '**/*.js'",
@@ -10,7 +10,7 @@
   "dependencies": {
     "@newlogic-digital/utils-js": "^1.2.0",
     "webuum": "^0.1.0",
-    "winduum-elements": "^0.0.4"
+    "winduum-elements": "^0.0.6"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -20,7 +20,7 @@
     "@types/grecaptcha": "^3.0.9",
     "eslint": "^10.5.0",
     "globals": "^17.7.0",
-    "winduum": "^3.0.0-next.1"
+    "winduum": "^3.0.0-next.4"
   },
   "files": [
     "src"

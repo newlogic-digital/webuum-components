@@ -12,8 +12,8 @@ export class Form extends FormComponent {
   connectedCallback() {
     super.connectedCallback()
 
-    if (this.$recaptchaApi) {
-      importScript(this.$recaptchaUrl.replace('{apikey}', this.$recaptchaApi))
+    if (this.$recaptchaApikey) {
+      importScript(this.$recaptchaUrl.replace('{apikey}', this.$recaptchaApikey))
 
       this.addEventListener('submit', (event) => {
         event.preventDefault()
@@ -26,7 +26,7 @@ export class Form extends FormComponent {
     if (event?.detail?.recaptchaExecuted) return
 
     window.grecaptcha.enterprise.ready(async () => {
-      this.element.gtoken.value = await window.grecaptcha.enterprise.execute(this.$recaptchaApi, { action: this.$recaptchaAction ?? 'form' })
+      this.element.gtoken.value = await window.grecaptcha.enterprise.execute(this.$recaptchaApikey, { action: this.$recaptchaAction ?? 'form' })
       this.element.dispatchEvent(new CustomEvent('submit', { cancelable: true, detail: { recaptchaExecuted: true } }))
     })
   }
