@@ -1,9 +1,15 @@
 import { setCookieConsent, initCookieConsent } from '@newlogic-digital/cookieconsent-js'
-import { WebuumElement } from 'webuum'
+import { initializeController } from 'webuum'
 
-export class CookieConsentCommon extends WebuumElement {
+export const CookieConsentCommon = Base => class extends Base {
   $cookieConsentItemKey = 'cookieconsent-js'
   $cookieConsentExpireItemKey = 'cookieconsent-js-expire'
+
+  constructor() {
+    super()
+
+    initializeController(/** @type HTMLElement */ this)
+  }
 
   getCookieConsentItem() {
     return localStorage.getItem(this.$cookieConsentItemKey)
@@ -14,70 +20,72 @@ export class CookieConsentCommon extends WebuumElement {
   }
 }
 
-export class CookieConsentDialog extends CookieConsentCommon {
+export class CookieConsentDialog extends CookieConsentCommon(HTMLDialogElement) {
   async connectedCallback() {
-    initCookieConsent(document, this.getCookieConsentItem() ?? [])
+    initCookieConsent(document, this.getCookieConsentItem())
 
     if (document.querySelector('.x-cookieconsent-form')) {
       return
     }
 
     if (!this.getCookieConsentItem() || parseInt(this.getCookieConsentExpireItem()) < Date.now()) {
-      const { showDialog } = await import('winduum/src/components/dialog/index.js')
-
-      await showDialog(this, { closable: false })
+      this.showModal()
     }
     else {
       this.remove()
     }
   }
 
-  async approve() {
-    await this.hide(['performance', 'marketing'])
-  }
+  close({ source }) {
+    super.close()
 
-  async decline() {
-    await this.hide([])
-  }
+    const type = source.value === 'approve' ? ['performance', 'marketing'] : []
 
-  async hide(type) {
-    const { closeDialog } = await import('winduum/src/components/dialog/index.js')
-
-    await setCookieConsent(type)
-    initCookieConsent(document, type)
-    await closeDialog(this, { remove: true })
+    setCookieConsent(type)
+    initCookieConsent(document, type.toString())
   }
 }
 
-export class CookieConsentForm extends CookieConsentCommon {
+export class CookieConsentForm extends CookieConsentCommon(HTMLFormElement) {
   connectedCallback() {
-    document.querySelector('.x-cookieconsent-dialog')?.close()
+    this.$dialog = document.querySelector('.x-cookieconsent-dialog')
+    this.$inputs = this.querySelectorAll('input:not([disabled])')
+    this.$controller = new AbortController()
+    const { signal } = this.$controller
 
-    this.querySelectorAll('input:not([disabled])').forEach((input) => {
+    this.$dialog?.close()
+
+    this.$inputs.forEach((input) => {
       input.checked = false
     })
 
     JSON.parse(this.getCookieConsentItem())?.forEach((type) => {
-      if (this.querySelector(`input[value="${type}"]`) !== null) {
-        this.querySelector(`input[value="${type}"]`).checked = true
+      const element = this.querySelector(`input[value="${type}"]`)
+
+      if (element !== null) {
+        element.checked = true
       }
     })
-  }
 
-  async update() {
-    const type = []
+    this.addEventListener('submit', (event) => {
+      event.preventDefault()
 
-    this.querySelectorAll('input:not([disabled])').forEach((input) => {
-      input.checked && type.push(input.value)
-    })
+      const type = []
 
-    await setCookieConsent(type)
-    location.reload()
+      this.$inputs.forEach((input) => {
+        input.checked && type.push(input.value)
+      })
+
+      setCookieConsent(type)
+      location.reload()
+    }, { signal })
   }
 
   disconnectedCallback() {
+    this.$controller.abort()
+
     if ((!this.getCookieConsentItem() || parseInt(this.getCookieConsentExpireItem()) < Date.now())) {
-      document.querySelector('.x-cookieconsent-dialog')?.showModal()
+      this.$dialog?.showModal()
     }
   }
 }
