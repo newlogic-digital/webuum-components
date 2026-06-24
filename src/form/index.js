@@ -14,12 +14,22 @@ export class Form extends FormComponent {
 
     if (this.$recaptchaApikey) {
       importScript(this.$recaptchaUrl.replace('{apikey}', this.$recaptchaApikey))
-
-      this.addEventListener('submit', (event) => {
-        event.preventDefault()
-        this.recaptchaExecute(event)
-      }, { signal: this.$controller.signal })
     }
+
+    this.addEventListener('submit', (event) => {
+      if (this.$recaptchaApikey) {
+        if (!this.recaptchaExecuted) {
+          event.preventDefault()
+          this.recaptchaExecute(event)
+          return
+        }
+        else if (!this.hasAttribute('data-naja')) {
+          this.submit()
+        }
+      }
+
+      this.closest('dialog[open]')?.close()
+    }, { signal: this.$controller.signal })
   }
 
   recaptchaExecute(event) {
@@ -27,7 +37,8 @@ export class Form extends FormComponent {
 
     window.grecaptcha.enterprise.ready(async () => {
       this.gtoken.value = await window.grecaptcha.enterprise.execute(this.$recaptchaApikey, { action: this.$recaptchaAction ?? 'form' })
-      this.dispatchEvent(new CustomEvent('submit', { cancelable: true, detail: { recaptchaExecuted: true } }))
+      this.recaptchaExecuted = true
+      this.requestSubmit(event.submitter)
     })
   }
 }
