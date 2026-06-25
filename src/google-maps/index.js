@@ -11,7 +11,7 @@ export class GoogleMaps extends WebuumElement {
     $apikey: null,
   }
 
-  markerContent = `<svg class="size-16 text-accent"><use href="#heroicons-solid/map-pin"></use></svg>`
+  $markerContent = `<svg class="size-16 text-accent"><use href="#heroicons-solid/map-pin"></use></svg>`
 
   async connectedCallback() {
     const { setOptions, importLibrary } = await import('@googlemaps/js-api-loader')
