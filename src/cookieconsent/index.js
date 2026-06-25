@@ -36,12 +36,12 @@ export class CookieConsentDialog extends CookieConsentCommon(HTMLDialogElement) 
     }
   }
 
-  close({ source }) {
+  close(event) {
     super.close()
 
-    if (!source) return
+    if (!event?.source) return
 
-    const type = source.value === 'approve' ? ['performance', 'marketing'] : []
+    const type = event.source.value === 'approve' ? ['performance', 'marketing'] : []
 
     setCookieConsent(type)
     initCookieConsent(document, type.toString())
