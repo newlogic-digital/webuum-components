@@ -6,9 +6,9 @@ export class GoogleMaps extends WebuumElement {
     $map: null,
   }
 
-  static values = {
+  static props = {
     $options: {},
-    $key: null,
+    $apikey: null,
   }
 
   markerContent = `<svg class="size-16 text-accent"><use href="#heroicons-solid/map-pin"></use></svg>`
@@ -17,12 +17,12 @@ export class GoogleMaps extends WebuumElement {
     const { setOptions, importLibrary } = await import('@googlemaps/js-api-loader')
 
     setOptions({
-      key: this.$key,
+      key: this.$apikey,
     })
 
     const { Map } = await importLibrary('maps')
 
-    this.map = new Map(this.$map, {
+    this.map = new Map(this.$map ?? this, {
       zoom: 13,
       mapId: getId(),
       mapTypeControl: false,
