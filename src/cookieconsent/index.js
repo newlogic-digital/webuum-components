@@ -22,7 +22,7 @@ export const CookieConsentCommon = Base => class extends Base {
 
 export class CookieConsentDialog extends CookieConsentCommon(HTMLDialogElement) {
   async connectedCallback() {
-    initCookieConsent(document, this.getCookieConsentItem())
+    initCookieConsent(document, this.getCookieConsentItem() ?? [])
 
     if (document.querySelector('.x-cookieconsent-form')) {
       return
@@ -38,6 +38,8 @@ export class CookieConsentDialog extends CookieConsentCommon(HTMLDialogElement) 
 
   close({ source }) {
     super.close()
+
+    if (!source) return
 
     const type = source.value === 'approve' ? ['performance', 'marketing'] : []
 
