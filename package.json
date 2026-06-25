@@ -1,6 +1,6 @@
 {
   "name": "@newlogic-digital/webuum-components",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "type": "module",
   "scripts": {
     "eslint": "eslint '**/*.js'",

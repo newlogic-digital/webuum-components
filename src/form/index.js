@@ -1,12 +1,19 @@
-import { Form as FormComponent } from 'winduum-elements/components/form/index.js'
+import { Form as FormElement } from 'winduum-elements/components/form/index.js'
 import { importScript } from '@newlogic-digital/utils-js'
+import { validateForm } from 'winduum/src/components/form'
 
-export class Form extends FormComponent {
+export class Form extends FormElement {
   $recaptchaUrl = 'https://www.google.com/recaptcha/enterprise.js?render={apikey}'
 
   static props = {
     $recaptchaApikey: null,
     $recaptchaAction: null,
+  }
+
+  reset(event) {
+    super.reset()
+
+    validateForm(event, { validateOptions: { validate: false } })
   }
 
   connectedCallback() {
@@ -19,7 +26,6 @@ export class Form extends FormComponent {
         if (!this.recaptchaExecuted) {
           event.preventDefault()
           this.recaptchaExecute(event)
-          return
         }
         else if (!this.hasAttribute('data-naja')) {
           this.submit()
