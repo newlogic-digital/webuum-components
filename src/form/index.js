@@ -14,10 +14,8 @@ export class Form extends FormComponent {
 
     if (this.$recaptchaApikey) {
       importScript(this.$recaptchaUrl.replace('{apikey}', this.$recaptchaApikey))
-    }
 
-    this.addEventListener('submit', (event) => {
-      if (this.$recaptchaApikey) {
+      this.addEventListener('submit', (event) => {
         if (!this.recaptchaExecuted) {
           event.preventDefault()
           this.recaptchaExecute(event)
@@ -26,10 +24,8 @@ export class Form extends FormComponent {
         else if (!this.hasAttribute('data-naja')) {
           this.submit()
         }
-      }
-
-      this.closest('dialog[open]')?.close()
-    }, { signal: this.$controller.signal })
+      }, { signal: this.$controller.signal })
+    }
   }
 
   recaptchaExecute(event) {
