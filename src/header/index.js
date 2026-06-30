@@ -2,14 +2,7 @@ import { WebuumElement } from 'webuum'
 
 export class Header extends WebuumElement {
   connectedCallback() {
-    this.$controller = new AbortController()
-    const { signal } = this.$controller
-
-    window.addEventListener('scroll', this.notTop.bind(this), { signal })
-  }
-
-  disconnectedCallback() {
-    this.$controller.abort()
+    window.addEventListener('scroll', this.notTop.bind(this), { signal: this.$signal })
   }
 
   notTop() {

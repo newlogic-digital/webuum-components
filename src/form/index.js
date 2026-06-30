@@ -30,7 +30,7 @@ export class Form extends FormElement {
         else if (!this.hasAttribute('data-naja')) {
           this.submit()
         }
-      }, { signal: this.$controller.signal })
+      }, { signal: this.$signal })
     }
   }
 

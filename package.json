@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "@newlogic-digital/utils-js": "^1.2.0",
-    "webuum": "^0.1.0",
-    "winduum-elements": "^0.0.6"
+    "webuum": "^0.2.0-next.0",
+    "winduum-elements": "^0.0.8"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -18,7 +18,7 @@
     "@newlogic-digital/cookieconsent-js": "^1.2.0-next.1",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/grecaptcha": "^3.0.9",
-    "eslint": "^10.5.0",
+    "eslint": "^10.6.0",
     "globals": "^17.7.0",
     "winduum": "^3.0.0-next.4"
   },

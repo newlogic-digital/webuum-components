@@ -1,5 +1,5 @@
 import { setCookieConsent, initCookieConsent } from '@newlogic-digital/cookieconsent-js'
-import { initializeController } from 'webuum'
+import { defineElement } from 'webuum'
 
 export const CookieConsentCommon = Base => class extends Base {
   $cookieConsentItemKey = 'cookieconsent-js'
@@ -8,7 +8,7 @@ export const CookieConsentCommon = Base => class extends Base {
   constructor() {
     super()
 
-    initializeController(/** @type HTMLElement */ this)
+    defineElement(/** @type HTMLElement */ this)
   }
 
   getCookieConsentItem() {
@@ -52,8 +52,6 @@ export class CookieConsentForm extends CookieConsentCommon(HTMLFormElement) {
   connectedCallback() {
     this.$dialog = document.querySelector('.x-cookieconsent-dialog')
     this.$inputs = this.querySelectorAll('input:not([disabled])')
-    this.$controller = new AbortController()
-    const { signal } = this.$controller
 
     this.$dialog?.close()
 
@@ -80,11 +78,11 @@ export class CookieConsentForm extends CookieConsentCommon(HTMLFormElement) {
 
       setCookieConsent(type)
       location.reload()
-    }, { signal })
+    }, { signal: this.$signal })
   }
 
   disconnectedCallback() {
-    this.$controller.abort()
+    super.disconnectedCallback()
 
     if ((!this.getCookieConsentItem() || parseInt(this.getCookieConsentExpireItem()) < Date.now())) {
       this.$dialog?.showModal()
