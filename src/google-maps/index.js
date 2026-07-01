@@ -38,7 +38,7 @@ export class GoogleMaps extends WebuumElement {
 
     const { importLibrary } = await import('@googlemaps/js-api-loader')
     const { AdvancedMarkerElement } = await importLibrary('marker')
-    const content = new DOMParser().parseFromString(this.markerContent, 'text/html').body.firstChild
+    const content = new DOMParser().parseFromString(this.$markerContent, 'text/html').body.firstChild
 
     this.marker = new AdvancedMarkerElement({
       map: this.map,
