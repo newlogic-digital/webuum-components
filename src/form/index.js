@@ -41,7 +41,10 @@ export class Form extends WebuumLazyElement(FormElement) {
   }
 
   intersectCallback(entry) {
-    if (entry.isIntersecting) this.lazyCallback()
+    if (!entry.isIntersecting || !this.$lazy) return
+
+    this.lazyCallback()
+    this.$lazy = false
   }
 
   recaptchaExecute(event) {
