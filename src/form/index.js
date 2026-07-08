@@ -1,13 +1,15 @@
 import { Form as FormElement } from 'winduum-elements/components/form/index.js'
 import { importScript } from '@newlogic-digital/utils-js'
 import { validateForm } from 'winduum/src/components/form'
+import { WebuumLazyElement } from 'webuum/elements'
 
-export class Form extends FormElement {
+export class Form extends WebuumLazyElement(FormElement) {
   $recaptchaUrl = 'https://www.google.com/recaptcha/enterprise.js?render={apikey}'
 
   static props = {
     $recaptchaApikey: null,
     $recaptchaAction: null,
+    $lazy: true,
   }
 
   reset(event) {
@@ -17,6 +19,10 @@ export class Form extends FormElement {
   }
 
   connectedCallback() {
+    if (!this.$lazy) this.lazyCallback()
+  }
+
+  lazyCallback() {
     super.connectedCallback()
 
     if (this.$recaptchaApikey) {
@@ -32,6 +38,10 @@ export class Form extends FormElement {
         }
       }, { signal: this.$signal })
     }
+  }
+
+  intersectCallback(entry) {
+    if (entry.isIntersecting) this.lazyCallback()
   }
 
   recaptchaExecute(event) {
