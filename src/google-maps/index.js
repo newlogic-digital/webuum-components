@@ -1,7 +1,7 @@
-import { WebuumElement } from 'webuum'
 import { getId } from '@newlogic-digital/utils-js'
+import { WebuumLazyElement } from 'webuum/elements'
 
-export class GoogleMaps extends WebuumElement {
+export class GoogleMaps extends WebuumLazyElement(HTMLElement) {
   static parts = {
     $map: null,
   }
@@ -9,11 +9,12 @@ export class GoogleMaps extends WebuumElement {
   static props = {
     $options: {},
     $apikey: null,
+    $lazy: true,
   }
 
   $markerContent = `<svg class="size-16 text-accent"><use href="#heroicons-solid/map-pin"></use></svg>`
 
-  async connectedCallback() {
+  async lazyCallback() {
     const { setOptions, importLibrary } = await import('@googlemaps/js-api-loader')
 
     setOptions({

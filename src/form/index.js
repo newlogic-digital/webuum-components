@@ -1,10 +1,14 @@
-import { Form as FormElement } from 'winduum-elements/components/form/index.js'
 import { importScript } from '@newlogic-digital/utils-js'
 import { validateForm } from 'winduum/src/components/form'
 import { WebuumLazyElement } from 'webuum/elements'
 
-export class Form extends WebuumLazyElement(FormElement) {
+export class Form extends WebuumLazyElement(HTMLFormElement) {
   $recaptchaUrl = 'https://www.google.com/recaptcha/enterprise.js?render={apikey}'
+
+  /**
+   * @type {import('winduum/src/components/form/index.d.ts').ValidateFormOptions}
+   */
+  $validateFormOptions
 
   static props = {
     $recaptchaApikey: null,
@@ -15,15 +19,12 @@ export class Form extends WebuumLazyElement(FormElement) {
   reset(event) {
     super.reset()
 
-    validateForm(event, { validateOptions: { validate: false } })
-  }
-
-  connectedCallback() {
-    if (!this.$lazy) this.lazyCallback()
+    validateForm(event, this.$validateFormOptions)
   }
 
   lazyCallback() {
-    super.connectedCallback()
+    this.noValidate = true
+    this.addEventListener('submit', this.validateForm, { signal: this.$signal })
 
     if (this.$recaptchaApikey) {
       importScript(this.$recaptchaUrl.replace('{apikey}', this.$recaptchaApikey))
@@ -40,13 +41,6 @@ export class Form extends WebuumLazyElement(FormElement) {
     }
   }
 
-  intersectCallback(entry) {
-    if (!entry.isIntersecting || !this.$lazy) return
-
-    this.lazyCallback()
-    this.$lazy = false
-  }
-
   recaptchaExecute(event) {
     if (event?.detail?.recaptchaExecuted) return
 
@@ -55,5 +49,9 @@ export class Form extends WebuumLazyElement(FormElement) {
       this.recaptchaExecuted = true
       this.requestSubmit(event.submitter)
     })
+  }
+
+  validateForm(event) {
+    validateForm(event, this.$validateFormOptions)
   }
 }
